@@ -1,0 +1,3 @@
+[submodule "lib/react-dockable-ts"]
+	path = lib/react-dockable-ts
+	url = git@github.com:embarkrpg/react-dockable-ts.git
