@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Dockable, { Widget } from '../lib/react-dockable-ts/src';
-import { Draggable, DraggingStyle, Droppable, NotDraggingStyle } from 'react-beautiful-dnd';
+import { Draggable, DraggingStyle, DropResult, Droppable, NotDraggingStyle } from 'react-beautiful-dnd';
 
 const getItemStyle = (isDragging: boolean, draggableStyle: DraggingStyle | NotDraggingStyle | undefined) => ({
   // change background colour if dragging
@@ -57,7 +57,7 @@ function Demo() {
   })
 
   const DroppableItems = ({ parentId }: { parentId: string }) => {
-    return (<Droppable droppableId="droppable">
+    return (<Droppable droppableId={parentId}>
       {(provided, snapshot) => (
         <div
           {...provided.droppableProps}
@@ -99,8 +99,17 @@ function Demo() {
         initialState={state.panels}
         onUpdate={workspace => setState({ panels: workspace })}
         spacing={3}
-      // themeClass={css.theme}
-      >
+        handleDragEnd={(result: DropResult) => {
+          var draggable = data.items.find(item => item.id == result.draggableId)
+          if(draggable && result.destination?.droppableId) {
+            draggable.location = result.destination?.droppableId;
+            setData({items: data.items});
+          }
+          else {
+            console.log('not valid', result);
+          }
+          
+        }}>
         <Widget id="MyComponentA" title="Component A">
           <DroppableItems parentId="MyComponentA"></DroppableItems>
         </Widget>
